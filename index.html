@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         
-        <title>Project 4</title>
+        <title>Project 5</title>
         
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -29,10 +29,31 @@
 		<div id="jqt">
 			<div id="home">
                 <header class="toolbar">
-                    <h1>Project 4</h1>
+                    <h1>Project 5</h1>
                     <a class="button slideup" id="infoButton" href="#newLocation">+</a>
                 </header>
 				<div id="map" class="map"></div>
+				
+				<div class="page">
+					<form action="#" method="get" id="search">
+						<input type="text" name="search" value="" placeholder="search" id="search" class="input" />
+						<div class="distance">
+							<label for="distance">Distance</label>
+							<select name="distance" id="distance">
+								<option value="">--</option>
+								<option value="5">5 Mi</option>
+								<option value="10">10 Mi</option>
+								<option value="15">15 Mi</option>
+								<option value="25">25 Mi</option>
+								<option value="50">50 Mi</option>
+								<option value="100">100 Mi</option>
+							</select>
+							<a href="#" class="clear" style="display:none">Clear Search</a>
+						</div>
+						<button type="submit">Search</button>
+					</form>
+				</div>
+				
 			</div>
 		
 
@@ -64,6 +85,7 @@
                 <header class="toolbar">
                     <h1>Update Location</h1>
                     <a class="back" href="#">Map</a>
+					<a class="button slideup" id="infoButton" href="#delete"><i class="icon-remove"></i> Delete</a>
                 </header>
                 
                 <div class="scroll">
@@ -82,6 +104,26 @@
 				        
 			    </div>
 			        
+            </div>
+			
+			<div id="delete">
+                <header class="toolbar">
+                    <h1>Delete Location</h1>
+                    <a class="back" href="#edit">Cancel</a>
+                </header>
+                
+	        	<form action="#" id="delete-location" class="scroll">
+				
+                    <div class="page">
+                   		<h2>Are you sure you want to delete this location?</h2>
+                    </div>
+					
+                    <div class="hidden-page">
+                    	<button class="submit redButton">Yes, Delete Location</button>
+                    </div>
+                    
+                </form>        		
+		        	
             </div>
         </div>
         

@@ -1,5 +1,9 @@
 @import url('font-awesome.css');
 
+h2{
+	text-align:center;
+}
+
 * {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
