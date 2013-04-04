@@ -62,6 +62,41 @@
 		}
 	});
 	
+	$('#delete-location').submit(function(e) {
+		var $thisLocation      = $(this);
+		var $name   = $thisLocation.find('#locationName');
+		var $street = $thisLocation.find('#streetAddress');
+		var $city   = $thisLocation.find('#city');
+		var $state  = $thisLocation.find('#state');
+		var $zip    = $thisLocation.find('#zipCode');
+		
+		var address = [
+			$street.val(),
+			$city.val(),
+			$state.val(),
+			$zip.val()
+		];
+		
+		var object = {
+			name: $name.val(),
+			address: address.join(' '),
+			street: $street.val(),
+			city: $city.val(),
+			state: $state.val(),
+			zipcode: $zip.val()
+		}
+		
+		map.deleteMarker(object, function() {
+			map.home();
+			$name.val('');
+			$street.val('');
+			$city.val('');
+			$state.val('');
+			$zip.val('');
+		});
+		
+	});
+	
 	$('#newLoc').submit(function(e) {
 		var $thisLocation      = $(this);
 		var $name   = $thisLocation.find('#locationName');

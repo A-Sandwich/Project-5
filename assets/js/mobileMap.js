@@ -175,6 +175,26 @@
 			marker.setPosition(new google.maps.LatLng(lat, lng));
 		}
 		
+		thisMap.deleteMarker = function(location, callback){
+			thisMap.db.deleteRows("markers", {ID: thisMap.editIndex+1}, function() {
+							var row = {
+								name: location.name,
+								address: location.address,
+								street: location.street,
+								city: location.city,
+								state: location.state,
+								zipcode: location.zipcode,
+								response: response,
+								lat: lat,
+								lng: lng
+							}
+							
+						console.log(row);
+						
+							return row;
+						});
+		});
+		
 		thisMap.editMarker = function(location, callback) {
 			
 			thisMap.geocode(location.address, function(response) {
