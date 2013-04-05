@@ -63,12 +63,15 @@
 	});
 	
 	$('#delete-location').submit(function(e) {
-		var $thisLocation      = $(this);
+		
+		var $thisLocation      = $('#editLoc');
 		var $name   = $thisLocation.find('#locationName');
 		var $street = $thisLocation.find('#streetAddress');
 		var $city   = $thisLocation.find('#city');
 		var $state  = $thisLocation.find('#state');
 		var $zip    = $thisLocation.find('#zipCode');
+		//alert($state.val());
+		
 		
 		var address = [
 			$street.val(),
@@ -95,6 +98,11 @@
 			$zip.val('');
 		});
 		
+		e.preventDefault();
+	
+		window.location = "#home";
+		
+		return false;
 	});
 	
 	$('#newLoc').submit(function(e) {
@@ -133,7 +141,7 @@
 		
 		e.preventDefault();
 		
-		window.getElementById('#home').click();
+		//window.getElementById('#home').click();
 		//window.location = "#home";
 		
 		return false;

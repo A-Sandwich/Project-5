@@ -129,6 +129,8 @@
 						});
 						
 						thisMap.db.commit();
+						alert(thisMap.db.query());
+						console.log(thisMap.db.query());
 					}
 				}
 				else {
@@ -150,7 +152,7 @@
 				
 					callback(response);
 				});
-				thisMap.fitBounds(thisMap.bounds);
+				//thisMap.fitBounds(thisMap.bounds);
 			}
 			});
 			;
@@ -175,25 +177,28 @@
 			marker.setPosition(new google.maps.LatLng(lat, lng));
 		}
 		
-		thisMap.deleteMarker = function(location, callback){
-			thisMap.db.deleteRows("markers", {ID: thisMap.editIndex+1}, function() {
-							var row = {
-								name: location.name,
-								address: location.address,
-								street: location.street,
-								city: location.city,
-								state: location.state,
-								zipcode: location.zipcode,
-								response: response,
-								lat: lat,
-								lng: lng
-							}
-							
-						console.log(row);
+		thisMap.deleteMarker = function(location, callback) {
+			
+			thisMap.geocode(location.address, function(response) {
+			
+					var lat = response.results[0].geometry.location.lat();
+					var lng = response.results[0].geometry.location.lng();
+					
+						//alert(lat);		
+						//thisMap.deleteMarker(thisMap.markers[thisMap.editIndex], lat, lng);
 						
-							return row;
-						});
-		});
+						console.log(thisMap.db.query("markers", {lat: lat}));
+						
+						thisMap.db.deleteRows("markers", {lat: lat});
+						
+						thisMap.db.commit();
+						//console.log(thisMap.db.query());
+						thisMap.fitBounds(thisMap.bounds);
+					
+				
+			});
+			
+		}
 		
 		thisMap.editMarker = function(location, callback) {
 			
