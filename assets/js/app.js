@@ -2,6 +2,8 @@
 	
 	var jQT;
 	
+	var tf = true;
+	
     $(function(){
 	
 	    jQT = new $.jQTouch({
@@ -64,7 +66,15 @@
 	
 	$('#delete-location').submit(function(e) {
 		
-		var $thisLocation      = $('#editLoc');
+		tf = false;
+		
+		var id = map.editIndex;
+		
+		map.deleteMarker(id);
+		
+		return false;
+		
+		/*var $thisLocation      = $('#editLoc');
 		var $name   = $thisLocation.find('#locationName');
 		var $street = $thisLocation.find('#streetAddress');
 		var $city   = $thisLocation.find('#city');
@@ -102,7 +112,7 @@
 	
 		window.location = "#home";
 		
-		return false;
+		return false;*/
 	});
 	
 	$('#newLoc').submit(function(e) {

@@ -129,8 +129,8 @@
 						});
 						
 						thisMap.db.commit();
-						alert(thisMap.db.query());
-						console.log(thisMap.db.query());
+						//alert(thisMap.db.query());
+						//console.log(thisMap.db.query());
 					}
 				}
 				else {
@@ -173,31 +173,61 @@
 			return _return;
 		}
 		
+		
+		
+		thisMap.deleteMarker = function(id){
+			//var rowNum = 0;
+			//var numberOfRows = thisMap.db.rowCount();
+			console.log(id);
+			//thisMap.deleteMapMarker(id);
+			thisMap.db.deleteRows("markers", {ID: id});
+			thisMap.db.commit();
+			/*for(rowNum =0; rowNum<=numberOfRows; rowNum++){
+				if(rowNum == id){
+					thisMap.db.deleteRows("markers", id);
+				}
+			}*/
+		
+		}
+		//);
+		/*{
+			//console.log(location.address);
+			//console.log(thisMap.db.query("markers", {address: 
+			//var lat = response.results[0].geometry.location.lat();
+			//var lng = response.results[0].geometry.location.lng();
+			
+			
+				thisMap.db.deleteRows("markers", id);
+				console.log(id);
+				thisMap.db.commit();
+				//console.log(thisMap.db.query());
+				//console.log(thisMap.db.query());
+				//thisMap.fitBounds(thisMap.bounds);			
+		}*/
+		
+		/*thisMap.deleteMarker = function(location, callback) {
+			console.log(location.address);
+			//console.log(thisMap.db.query("markers", {address: 
+			var lat = response.results[0].geometry.location.lat();
+			var lng = response.results[0].geometry.location.lng();
+			
+			
+				thisMap.db.deleteRows("markers", {address: location.address});
+				
+				thisMap.db.commit();
+				console.log(thisMap.db.query());
+				//console.log(thisMap.db.query());
+				//thisMap.fitBounds(thisMap.bounds);			
+		}*/
+		
 		thisMap.updateMarker = function(marker, lat, lng) {
 			marker.setPosition(new google.maps.LatLng(lat, lng));
 		}
 		
-		thisMap.deleteMarker = function(location, callback) {
-			
-			thisMap.geocode(location.address, function(response) {
-			
-					var lat = response.results[0].geometry.location.lat();
-					var lng = response.results[0].geometry.location.lng();
-					
-						//alert(lat);		
-						//thisMap.deleteMarker(thisMap.markers[thisMap.editIndex], lat, lng);
-						
-						console.log(thisMap.db.query("markers", {lat: lat}));
-						
-						thisMap.db.deleteRows("markers", {lat: lat});
-						
-						thisMap.db.commit();
-						//console.log(thisMap.db.query());
-						thisMap.fitBounds(thisMap.bounds);
-					
-				
-			});
-			
+		thisMap.deleteMapMarker = function(marker) {
+			//marker.setPosition(new google.maps.LatLng(lat, lng));
+			marker.setMap(NULL);
+		
 		}
 		
 		thisMap.editMarker = function(location, callback) {
