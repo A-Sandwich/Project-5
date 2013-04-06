@@ -1,9 +1,10 @@
 ;(function($) {
 	
 	var MobileMap = function(object, options) {
-	
+		var circles = [], center, radius, hasLoaded = false, zoom;
 		var $thisMap = $(object);
-		
+		center = new google.maps.LatLng(39.76, -86.15);
+		radius = 15;
 		var thisMap = {
 			
 			callback: {
@@ -52,7 +53,7 @@
 			thisMap.db.query('markers', function(row) {//Add new marker to table (That exists)
 				thisMap.newMarker(row.lat, row.lng);
 			});
-			
+			//thisMap.map.setBounds(lat, lng);
 			return thisMap.map;
 		}
 		
@@ -303,6 +304,58 @@
 		
 		thisMap.initialize();
 		
+		
+			/*if(!hasLoaded){
+				bounds = map.getBounds();
+
+				var centerCircle = new google.maps.Circle({
+					center: center,
+					fillColor: 'red',
+					radius: radius*1609.344,
+					//Must be assigned to map. Exists here, but not on a map.
+					map: $map
+				});
+
+				google.maps.event.addListener(centerCircle, 'click', function(){
+					centerCircle.setVisible(false);
+					
+					map.setCenter(center);
+					map.setZoom(zoom);
+				});
+				
+				bounds.extend(centerCircle.getBounds());
+				map.setBounds(bounds);
+				circles.push(centerCircle);
+				hasLoaded = true;
+				google.maps.event.removeListener(tilesLoadsEvent);
+			}
+		});*/
+		google.maps.event.addListener(thisMap.map, 'tilesloaded', function(){
+			if(!hasLoaded){
+				//bounds = thisMap.map.getBounds();
+
+				var centerCircle = new google.maps.Circle({
+					center: center,
+					fillColor: 'red',
+					radius: radius*1609.344,
+					//Must be assigned to map. Exists here, but not on a map.
+					map: thisMap.map
+				});
+
+				google.maps.event.addListener(centerCircle, 'click', function(){
+					centerCircle.setVisible(false);
+					
+					map.setCenter(center);
+					map.setZoom(zoom);
+				});
+				
+				//bounds.extend(centerCircle.getBounds());
+				//map.setBounds(bounds);
+				circles.push(centerCircle);
+				hasLoaded = true;
+				//google.maps.event.removeListener(tilesLoadsEvent);
+			}
+		});
 		return thisMap;
 	}
 	
