@@ -1,10 +1,17 @@
 ;(function($) {
 	
 	var MobileMap = function(object, options) {
-		var circles = [], center, radius, hasLoaded = false, zoom;
+		centerCircle = new google.maps.Circle({fillColor: 'red'});
+		var circles = [];
+		var tf = false;
+		//var center = new google.maps.LatLng(39.76, -86.15);
+		var radius, hasLoaded = false, zoom;
 		var $thisMap = $(object);
+		var lat = 0;
+		var lng = 0;
+		var dist = 0;
 		center = new google.maps.LatLng(39.76, -86.15);
-		radius = 15;
+		radius = 10;
 		var thisMap = {
 			
 			callback: {
@@ -81,6 +88,8 @@
 			thisMap.markers.push(marker);//Puts marker on map
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds);//Adjusts map's viewport
+			
+			
 			
 			return marker;
 		}
@@ -297,7 +306,11 @@
 					status: status,
 					results: results
 				}
-				
+				lat = response.results[0].geometry.location.lat();
+				lng = response.results[0].geometry.location.lng();
+				center = new google.maps.LatLng(lat, lng);
+				centerCircle.setCenter(center);
+				//alert("center's "+centerCircle.getCenter());
 				callback(response);
 			});
 		}
@@ -330,11 +343,98 @@
 				google.maps.event.removeListener(tilesLoadsEvent);
 			}
 		});*/
-		google.maps.event.addListener(thisMap.map, 'tilesloaded', function(){
+		
+		
+		thisMap.search = function(location, dist){
+			//centerCircle.setVisible(false);
+			//alert("center "+center);
+			/*thisMap.geocode(location, function(response) {
+				lat = response.results[0].geometry.location.lat();
+				lng = response.results[0].geometry.location.lng();
+				center = new google.maps.LatLng(lat, -lng);
+				alert("Latitude "+lat);
+			
+					alert("center "+center);	
+					
+					centerCircle.setCenter(center);
+					centerCircle.setRadius(dist*1609.344);
+					centerCircle.setMap(thisMap.map);
+					//centerCircle.setVisible(true);
+					circles.push(thisMap.centerCircle);
+					alert(centerCircle.getCenter());
+			});*/
+			
+			/*thisMap.geocode(location, function(){
+			
+				
+				alert(centerCircle.getCenter());
+				
+			});*/
+			//alert("here");
+			thisMap.geocode(location);
+			
+			//centerCircle.setCenter(center);
+			
+			centerCircle.setRadius(100*1609.344);
+				
+			//centerCircle.setVisible(true);
+			circles.push(thisMap.centerCircle);
+			centerCircle.setMap(thisMap.map);
+			//alert(latitude);
+			//alert(thisMap.lat);
+			
+			//Must be assigned to map. Exists here, but not on a map.
+			
+			//centerCircle.setVisible(false);
+			//thisMap.map.clear();
+			//circles.push(centerCircle);
+			//circles.google.maps.Circle.clear();
+			//circles.pop(centerCircle);
+			//circles.clear();
+			/*thisMap.geocode(location, function(response) {
+			
+				if(response.success) {
+					lat = response.results[0].geometry.location.lat();
+					lng = response.results[0].geometry.location.lng();
+					var latLng = new google.maps.LatLng(lat, lng);
+					//lng = lng*-1;
+					
+					//center = new google.maps.LatLng(39.76, -86.15);
+					center = google.maps.LatLng(lat, lng);
+					//alert(google.maps.LatLng(lat, lng));
+					alert(lat);
+					alert(lng);
+					radius = dist;
+					
+					var centerCircle = new google.maps.Circle({
+						center: google.maps.LatLng(lat, lng),
+						fillColor: 'red',
+						radius: radius*1609.344,
+						//Must be assigned to map. Exists here, but not on a map.
+						map: thisMap.map
+					});
+
+					google.maps.event.addListener(centerCircle, 'click', function(){
+						centerCircle.setVisible(false);
+						
+						map.setCenter(center);
+						map.setZoom(zoom);
+					});
+						
+						
+						circles.push(centerCircle);
+						//hasLoaded = true;
+				}
+			});*/
+			
+		
+		};
+		
+		/*google.maps.event.addListener(thisMap.map, 'tilesloaded', function(){
 			if(!hasLoaded){
 				//bounds = thisMap.map.getBounds();
 
-				var centerCircle = new google.maps.Circle({
+				centerCircle = new google.maps.Circle({
 					center: center,
 					fillColor: 'red',
 					radius: radius*1609.344,
@@ -355,7 +455,7 @@
 				hasLoaded = true;
 				//google.maps.event.removeListener(tilesLoadsEvent);
 			}
-		});
+		});*/
 		return thisMap;
 	}
 	

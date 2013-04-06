@@ -64,6 +64,29 @@
 		}
 	});
 	
+	$('#search').submit(function(e) {
+		var $thisLocation      = $(this);
+		var $street   = $thisLocation.find('#search');
+		var $miles = $thisLocation.find('#distance');
+		var address = [
+			$street.val()
+		];
+		
+		//alert($street.val());
+		//alert($miles.val());
+		
+		var object = {
+			street: $street.val()
+		}
+		
+		//Send information to mobileMap to be used
+		map.search($street.val(), $miles.val()	 ,function() {
+			$street.val('');
+		});
+		
+		e.preventDefault();
+	});
+	
 	$('#delete-location').submit(function(e) {
 		
 		tf = false;
