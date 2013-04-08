@@ -31,20 +31,21 @@
 			center: new google.maps.LatLng(39.76, -86.15)//Coordinates = Indianapolis
 		},
 		callback: {
-			newMarker: function(marker, lat, lng, index) {
+			newMarker: function(marker, lat, lng, id) {
 				google.maps.event.addListener(marker, 'click', function() {
 					
-					map.editIndex = index;
+					map.editIndex = id;
 					
 					var row     = map.db.query('markers', function(row) {
-						if(row.ID == index+1) {
+						console.log(row.ID+' == '+(id));
+						if(row.ID == id) {
 							return true;
 						}
 						return false;
 					});
 					
+					console.log(row);
 					row = row[0];
-					
 					var $name   = $('#editLoc').find('#locationName');
 					var $street = $('#editLoc').find('#streetAddress');
 					var $city   = $('#editLoc').find('#city');

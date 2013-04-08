@@ -26,7 +26,7 @@
 			mapOptions: {
 				zoom: 14,
 				center: new google.maps.LatLng(0, 0), 
-				mapTypeId: google.maps.MapTypeId.SATELLITE, 
+				mapTypeId: google.maps.MapTypeId.ROADMAP, 
 				panControl: false,//disables pan control!
 				scrollwheel: false // Doesn't allow zoom via scroll wheel on mouse, does not disable zoom scroll wheel on side.
 				//navigationControl: false, gets rid of ui
@@ -59,7 +59,7 @@
 			}
 			
 			thisMap.db.query('markers', function(row) {//Add new marker to table (That exists)
-				thisMap.newMarker(row.lat, row.lng);
+				thisMap.newMarker(row.lat, row.lng, row.ID);
 			});
 			//thisMap.map.setBounds(lat, lng);
 			return thisMap.map;
@@ -74,6 +74,7 @@
 		//delete later -- for testing
 		thisMap.drop = function(){
 			thisMap.db.drop();
+			alert("database has been purged, please refresh the page.");
 		}
 		
 		thisMap.home = function() {
@@ -87,7 +88,11 @@
 		
 		
 		//Adds a new marker
-		thisMap.newMarker = function(lat, lng) {
+		thisMap.newMarker = function(lat, lng, id) {
+			if(typeof id == "undefined") {
+				var id = thisMap.markers.length+1;
+			}
+		
 			var latLng = new google.maps.LatLng(lat, lng);
 		
 			marker = new google.maps.Marker({
@@ -95,12 +100,13 @@
 				position: latLng 
 			});
 			
-			thisMap.callback.newMarker(marker, lat, lng, thisMap.markers.length);
+			thisMap.callback.newMarker(marker, lat, lng, id);
 			
 			thisMap.markers.push(marker);//Puts marker on map
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds);//Adjusts map's viewport
 			
+			console.log(thisMap.bounds);
 			
 			
 			return marker;
@@ -199,10 +205,26 @@
 		thisMap.deleteMarker = function(id){
 			//var rowNum = 0;
 			//var numberOfRows = thisMap.db.rowCount();
+			//console.log(id);
+			//console.log(thisMap.markers[id]);
+			/*console.log(thisMap.markers[0]);
+			console.log(thisMap.markers[1]);
+			console.log(thisMap.markers[2]);
+			console.log(thisMap.markers[3]);
+			console.log(thisMap.db.query(row(0)));
+			console.log(thisMap.db.query(row(1)));
+			console.log(thisMap.db.query(row(2)));
+			console.log(thisMap.db.query(row(3)));
+			console.log(thisMap.db.query(row(4)));*/
+			
+			//thisMap.markers[id].setMap(null);
+			
 			console.log(id);
-			//thisMap.deleteMapMarker(id);
-			thisMap.db.deleteRows("markers", {ID: id});
+			console.log(thisMap.markers[id]);
+			console.log(thisMap.db.rowCount("markers"));
+			thisMap.db.deleteRows("markers", {ID: (id+1)});
 			thisMap.db.commit();
+			
 		
 		}
 		
@@ -211,11 +233,10 @@
 			marker.setPosition(new google.maps.LatLng(lat, lng));
 		}
 		
-		thisMap.deleteMapMarker = function(marker) {
+		/*thisMap.deleteMapMarker = function(marker) {
 			//marker.setPosition(new google.maps.LatLng(lat, lng));
 			marker.setMap(NULL);
-		
-		}
+		}*/
 		
 		thisMap.editMarker = function(location, callback) {
 			
