@@ -222,9 +222,9 @@
 			console.log(id);
 			console.log(thisMap.markers[id]);
 			console.log(thisMap.db.rowCount("markers"));
-			thisMap.db.deleteRows("markers", {ID: (id+1)});
+			thisMap.db.deleteRows("markers", {ID: (id)});
 			thisMap.db.commit();
-			
+			//thisMap.home();
 		
 		}
 		
