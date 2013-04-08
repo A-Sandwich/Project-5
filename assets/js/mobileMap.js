@@ -4,6 +4,7 @@
 		centerCircle = new google.maps.Circle({fillColor: 'red'});
 		var circles = [];
 		var tf = false;
+		var oldZoom = 0;
 		//var center = new google.maps.LatLng(39.76, -86.15);
 		var radius, hasLoaded = false, zoom;
 		var $thisMap = $(object);
@@ -27,7 +28,7 @@
 				center: new google.maps.LatLng(0, 0), 
 				mapTypeId: google.maps.MapTypeId.SATELLITE, 
 				panControl: false,//disables pan control!
-				scrollwheel: false, // Doesn't allow zoom via scroll wheel on mouse, does not disable zoom scrool wheel on side.
+				scrollwheel: false // Doesn't allow zoom via scroll wheel on mouse, does not disable zoom scroll wheel on side.
 				//navigationControl: false, gets rid of ui
 				//mapTypeControl: false, gets rid of map type button
 			},
@@ -62,6 +63,17 @@
 			});
 			//thisMap.map.setBounds(lat, lng);
 			return thisMap.map;
+		}
+		
+		thisMap.removeCircle = function(){
+			centerCircle.setRadius(0);
+			thisMap.map.setZoom(thisMap.oldZoom);
+			//thisMap.map.setBounds(thisMap.bounds);
+		}
+		
+		//delete later -- for testing
+		thisMap.drop = function(){
+			thisMap.db.drop();
 		}
 		
 		thisMap.home = function() {
@@ -139,8 +151,7 @@
 						});
 						
 						thisMap.db.commit();
-						//alert(thisMap.db.query());
-						//console.log(thisMap.db.query());
+						
 					}
 				}
 				else {
@@ -192,43 +203,9 @@
 			//thisMap.deleteMapMarker(id);
 			thisMap.db.deleteRows("markers", {ID: id});
 			thisMap.db.commit();
-			/*for(rowNum =0; rowNum<=numberOfRows; rowNum++){
-				if(rowNum == id){
-					thisMap.db.deleteRows("markers", id);
-				}
-			}*/
 		
 		}
-		//);
-		/*{
-			//console.log(location.address);
-			//console.log(thisMap.db.query("markers", {address: 
-			//var lat = response.results[0].geometry.location.lat();
-			//var lng = response.results[0].geometry.location.lng();
-			
-			
-				thisMap.db.deleteRows("markers", id);
-				console.log(id);
-				thisMap.db.commit();
-				//console.log(thisMap.db.query());
-				//console.log(thisMap.db.query());
-				//thisMap.fitBounds(thisMap.bounds);			
-		}*/
 		
-		/*thisMap.deleteMarker = function(location, callback) {
-			console.log(location.address);
-			//console.log(thisMap.db.query("markers", {address: 
-			var lat = response.results[0].geometry.location.lat();
-			var lng = response.results[0].geometry.location.lng();
-			
-			
-				thisMap.db.deleteRows("markers", {address: location.address});
-				
-				thisMap.db.commit();
-				console.log(thisMap.db.query());
-				//console.log(thisMap.db.query());
-				//thisMap.fitBounds(thisMap.bounds);			
-		}*/
 		
 		thisMap.updateMarker = function(marker, lat, lng) {
 			marker.setPosition(new google.maps.LatLng(lat, lng));
@@ -318,144 +295,40 @@
 		thisMap.initialize();
 		
 		
-			/*if(!hasLoaded){
-				bounds = map.getBounds();
-
-				var centerCircle = new google.maps.Circle({
-					center: center,
-					fillColor: 'red',
-					radius: radius*1609.344,
-					//Must be assigned to map. Exists here, but not on a map.
-					map: $map
-				});
-
-				google.maps.event.addListener(centerCircle, 'click', function(){
-					centerCircle.setVisible(false);
-					
-					map.setCenter(center);
-					map.setZoom(zoom);
-				});
-				
-				bounds.extend(centerCircle.getBounds());
-				map.setBounds(bounds);
-				circles.push(centerCircle);
-				hasLoaded = true;
-				google.maps.event.removeListener(tilesLoadsEvent);
-			}
-		});*/
-		
-		
 		thisMap.search = function(location, dist){
-			//centerCircle.setVisible(false);
-			//alert("center "+center);
-			/*thisMap.geocode(location, function(response) {
-				lat = response.results[0].geometry.location.lat();
-				lng = response.results[0].geometry.location.lng();
-				center = new google.maps.LatLng(lat, -lng);
-				alert("Latitude "+lat);
 			
-					alert("center "+center);	
-					
-					centerCircle.setCenter(center);
-					centerCircle.setRadius(dist*1609.344);
-					centerCircle.setMap(thisMap.map);
-					//centerCircle.setVisible(true);
-					circles.push(thisMap.centerCircle);
-					alert(centerCircle.getCenter());
-			});*/
+			thisMap.geocode(location, function(){
+				center = centerCircle.getCenter();
+			});
 			
-			/*thisMap.geocode(location, function(){
+			centerCircle.setRadius(dist*1609.344);
 			
-				
-				alert(centerCircle.getCenter());
-				
-			});*/
-			//alert("here");
-			thisMap.geocode(location);
-			
-			//centerCircle.setCenter(center);
-			
-			centerCircle.setRadius(100*1609.344);
-				
-			//centerCircle.setVisible(true);
 			circles.push(thisMap.centerCircle);
 			centerCircle.setMap(thisMap.map);
-			//alert(latitude);
-			//alert(thisMap.lat);
-			
-			//Must be assigned to map. Exists here, but not on a map.
-			
-			//centerCircle.setVisible(false);
-			//thisMap.map.clear();
-			//circles.push(centerCircle);
-			//circles.google.maps.Circle.clear();
-			//circles.pop(centerCircle);
-			//circles.clear();
-			/*thisMap.geocode(location, function(response) {
-			
-				if(response.success) {
-					lat = response.results[0].geometry.location.lat();
-					lng = response.results[0].geometry.location.lng();
-					var latLng = new google.maps.LatLng(lat, lng);
-					//lng = lng*-1;
-					
-					//center = new google.maps.LatLng(39.76, -86.15);
-					center = google.maps.LatLng(lat, lng);
-					//alert(google.maps.LatLng(lat, lng));
-					alert(lat);
-					alert(lng);
-					radius = dist;
-					
-					var centerCircle = new google.maps.Circle({
-						center: google.maps.LatLng(lat, lng),
-						fillColor: 'red',
-						radius: radius*1609.344,
-						//Must be assigned to map. Exists here, but not on a map.
-						map: thisMap.map
-					});
-
-					google.maps.event.addListener(centerCircle, 'click', function(){
-						centerCircle.setVisible(false);
-						
-						map.setCenter(center);
-						map.setZoom(zoom);
-					});
-						
-						
-						circles.push(centerCircle);
-						//hasLoaded = true;
+			center = centerCircle.getCenter();
+			thisMap.oldZoom = thisMap.map.getZoom();
+			setTimeout(function () {
+				thisMap.map.setCenter(center);
+				if(dist == 100){
+					thisMap.map.setZoom(7);
+				}else if(dist == 50){
+					thisMap.map.setZoom(8);
+				}else if(dist == 25){
+					thisMap.map.setZoom(9);
+				}else if(dist == 15){
+					thisMap.map.setZoom(10);
+				}else if(dist == 10){
+					thisMap.map.setZoom(10);
+				}else if(dist == 5){
+					thisMap.map.setZoom(11);
+				}else{
+					thisMap.map.setZoom(7);
 				}
-			});*/
+			}, 250);
 			
-		
 		};
 		
-		/*google.maps.event.addListener(thisMap.map, 'tilesloaded', function(){
-			if(!hasLoaded){
-				//bounds = thisMap.map.getBounds();
-
-				centerCircle = new google.maps.Circle({
-					center: center,
-					fillColor: 'red',
-					radius: radius*1609.344,
-					//Must be assigned to map. Exists here, but not on a map.
-					map: thisMap.map
-				});
-
-				google.maps.event.addListener(centerCircle, 'click', function(){
-					centerCircle.setVisible(false);
-					
-					map.setCenter(center);
-					map.setZoom(zoom);
-				});
-				
-				//bounds.extend(centerCircle.getBounds());
-				//map.setBounds(bounds);
-				circles.push(centerCircle);
-				hasLoaded = true;
-				//google.maps.event.removeListener(tilesLoadsEvent);
-			}
-		});*/
+		
 		return thisMap;
 	}
 	

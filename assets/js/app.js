@@ -84,7 +84,20 @@
 			$street.val('');
 		});
 		
+		$('#clear').removeClass('hidden');
+		
 		e.preventDefault();
+	});
+	
+	//Delete later - for testing
+	$('#drop').click(function(e) {
+		map.drop();
+	});
+	
+	$('#clear').click(function(e) {
+		map.removeCircle();
+		
+		$('#clear').addClass('hidden');
 	});
 	
 	$('#delete-location').submit(function(e) {
@@ -95,47 +108,9 @@
 		
 		map.deleteMarker(id);
 		
-		return false;
-		
-		/*var $thisLocation      = $('#editLoc');
-		var $name   = $thisLocation.find('#locationName');
-		var $street = $thisLocation.find('#streetAddress');
-		var $city   = $thisLocation.find('#city');
-		var $state  = $thisLocation.find('#state');
-		var $zip    = $thisLocation.find('#zipCode');
-		//alert($state.val());
-		
-		
-		var address = [
-			$street.val(),
-			$city.val(),
-			$state.val(),
-			$zip.val()
-		];
-		
-		var object = {
-			name: $name.val(),
-			address: address.join(' '),
-			street: $street.val(),
-			city: $city.val(),
-			state: $state.val(),
-			zipcode: $zip.val()
-		}
-		
-		map.deleteMarker(object, function() {
-			map.home();
-			$name.val('');
-			$street.val('');
-			$city.val('');
-			$state.val('');
-			$zip.val('');
-		});
-		
-		e.preventDefault();
-	
 		window.location = "#home";
 		
-		return false;*/
+		return false;
 	});
 	
 	$('#newLoc').submit(function(e) {
@@ -174,8 +149,6 @@
 		
 		e.preventDefault();
 		
-		//window.getElementById('#home').click();
-		//window.location = "#home";
 		
 		return false;
 	});

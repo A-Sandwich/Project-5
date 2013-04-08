@@ -10,6 +10,13 @@ h2{
 	box-sizing: border-box;
 }
 
+.hidden{
+	display:none;
+}
+
+.visible{
+	
+}
 
 #map {
 	min-height: 400px;
