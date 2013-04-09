@@ -37,14 +37,13 @@
 					map.editIndex = id;
 					
 					var row     = map.db.query('markers', function(row) {
-						//console.log(row.ID+' == '+(id));
+						console.log(row.ID+' == '+(id));
 						if(row.ID == id) {
 							return true;
 						}
 						return false;
 					});
 					
-					//console.log(row);
 					row = row[0];
 					var $name   = $('#editLoc').find('#locationName');
 					var $street = $('#editLoc').find('#streetAddress');
@@ -73,8 +72,6 @@
 			$street.val()
 		];
 		
-		//alert($street.val());
-		//alert($miles.val());
 		
 		var object = {
 			street: $street.val()

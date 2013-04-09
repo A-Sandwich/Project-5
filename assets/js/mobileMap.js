@@ -76,7 +76,6 @@
 			for(i=0;i<thisMap.counter;i++){
 				thisMap.markers[thisMap.arrayOfKeptMarkers[i]].setMap(thisMap.map);
 			}
-			//thisMap.map.setBounds(thisMap.bounds);
 			thisMap.home();
 		}
 		
@@ -91,11 +90,8 @@
 				google.maps.event.trigger(thisMap.map, 'resize');
 				thisMap.map.setZoom(thisMap.mapOptions.zoom);
 				thisMap.map.fitBounds(thisMap.bounds);
-				//console.log(thisMap.bounds);
 				thisMap.resize();
 			}, 250);
-			
-			//thisMap.fitBounds(thisMap.bounds);
 			
 			$('a[href="#home"]').click();
 		}
@@ -119,8 +115,6 @@
 			thisMap.markers.push(marker);//Puts marker on map
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds);//Adjusts map's viewport
-			
-			//console.log(thisMap.bounds);
 
 			return marker;
 		}
@@ -198,8 +192,6 @@
 			;
 		}
 		
-		
-		
 		//Checks to see if lat&&lng are already in table
 		thisMap.hasLatLng = function(lat, lng) {
 			var _return = false;
@@ -213,32 +205,18 @@
 			return _return;
 		}
 		
-		
-		
 		thisMap.deleteMarker = function(id){
-			//var rowNum = 0;
-			//var numberOfRows = thisMap.db.rowCount();
-			
-			//thisMap.markers[id].setMap(null);
-			
 			thisMap.db.deleteRows("markers", {ID: (id)});
 			thisMap.db.commit();
-			//console.log(thisMap.markers.length);
 			thisMap.markers[id-1].setMap(null);
 			thisMap.map.setZoom(thisMap.mapOptions.zoom);
 			thisMap.map.fitBounds(thisMap.bounds);
-		
 		}
 		
 		
 		thisMap.updateMarker = function(marker, lat, lng) {
 			marker.setPosition(new google.maps.LatLng(lat, lng));
 		}
-		
-		/*thisMap.deleteMapMarker = function(marker) {
-			//marker.setPosition(new google.maps.LatLng(lat, lng));
-			marker.setMap(NULL);
-		}*/
 		
 		thisMap.editMarker = function(location, callback) {
 			
@@ -290,12 +268,8 @@
 		}
 		
 		thisMap.resize = function(){
-			if(latLng == undefined){
-				//console.log(lat);
-				//console.log(lng);
-				
+			if(latLng == undefined){				
 				var latLng = new google.maps.LatLng(lat, lng);
-				//console.log(latLng);
 			}
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds)
@@ -319,8 +293,6 @@
 				centerCircle.setCenter(center);
 				thisMap.centerCircLat = lat;
 				thisMap.centerCircLng = lng;
-				//console.log(lat);
-				//alert("center's "+centerCircle.getCenter());
 				callback(response);
 			});
 		}
