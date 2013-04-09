@@ -3,6 +3,9 @@
 	var MobileMap = function(object, options) {
 		centerCircle = new google.maps.Circle({fillColor: 'red'});
 		var circles = [];
+		
+		var centerCircLat;
+		var centerCircLng;
 		var tf = false;
 		var oldZoom = 0;
 		//var center = new google.maps.LatLng(39.76, -86.15);
@@ -21,6 +24,8 @@
 			db: new localStorageDB("MapIndex", localStorage),//storage variable
 			bounds: new google.maps.LatLngBounds(),
 			editIndex: false,
+			arrayOfKeptMarkers: [],
+			counter: 0,
 			geocoder: new google.maps.Geocoder(),
 			map: false,
 			mapOptions: {
@@ -68,7 +73,11 @@
 		thisMap.removeCircle = function(){
 			centerCircle.setRadius(0);
 			thisMap.map.setZoom(thisMap.oldZoom);
+			for(i=0;i<thisMap.counter;i++){
+				thisMap.markers[thisMap.arrayOfKeptMarkers[i]].setMap(thisMap.map);
+			}
 			//thisMap.map.setBounds(thisMap.bounds);
+			thisMap.home();
 		}
 		
 		//delete later -- for testing
@@ -78,10 +87,15 @@
 		}
 		
 		thisMap.home = function() {
+			setTimeout(function () {
+				google.maps.event.trigger(thisMap.map, 'resize');
+				thisMap.map.setZoom(thisMap.mapOptions.zoom);
+				thisMap.map.fitBounds(thisMap.bounds);
+				//console.log(thisMap.bounds);
+				thisMap.resize();
+			}, 250);
 			
-			google.maps.event.trigger(thisMap.map, 'resize');
-			thisMap.map.setZoom(thisMap.mapOptions.zoom);
-			thisMap.map.fitBounds(thisMap.bounds);
+			//thisMap.fitBounds(thisMap.bounds);
 			
 			$('a[href="#home"]').click();
 		}
@@ -106,9 +120,8 @@
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds);//Adjusts map's viewport
 			
-			console.log(thisMap.bounds);
-			
-			
+			//console.log(thisMap.bounds);
+
 			return marker;
 		}
 		
@@ -205,26 +218,15 @@
 		thisMap.deleteMarker = function(id){
 			//var rowNum = 0;
 			//var numberOfRows = thisMap.db.rowCount();
-			//console.log(id);
-			//console.log(thisMap.markers[id]);
-			/*console.log(thisMap.markers[0]);
-			console.log(thisMap.markers[1]);
-			console.log(thisMap.markers[2]);
-			console.log(thisMap.markers[3]);
-			console.log(thisMap.db.query(row(0)));
-			console.log(thisMap.db.query(row(1)));
-			console.log(thisMap.db.query(row(2)));
-			console.log(thisMap.db.query(row(3)));
-			console.log(thisMap.db.query(row(4)));*/
 			
 			//thisMap.markers[id].setMap(null);
 			
-			console.log(id);
-			console.log(thisMap.markers[id]);
-			console.log(thisMap.db.rowCount("markers"));
 			thisMap.db.deleteRows("markers", {ID: (id)});
 			thisMap.db.commit();
-			//thisMap.home();
+			//console.log(thisMap.markers.length);
+			thisMap.markers[id-1].setMap(null);
+			thisMap.map.setZoom(thisMap.mapOptions.zoom);
+			thisMap.map.fitBounds(thisMap.bounds);
 		
 		}
 		
@@ -288,6 +290,13 @@
 		}
 		
 		thisMap.resize = function(){
+			if(latLng == undefined){
+				//console.log(lat);
+				//console.log(lng);
+				
+				var latLng = new google.maps.LatLng(lat, lng);
+				//console.log(latLng);
+			}
 			thisMap.bounds.extend(latLng);//extends bounds of map to new point.
 			thisMap.map.fitBounds(thisMap.bounds)
 		}
@@ -308,6 +317,9 @@
 				lng = response.results[0].geometry.location.lng();
 				center = new google.maps.LatLng(lat, lng);
 				centerCircle.setCenter(center);
+				thisMap.centerCircLat = lat;
+				thisMap.centerCircLng = lng;
+				//console.log(lat);
 				//alert("center's "+centerCircle.getCenter());
 				callback(response);
 			});
@@ -328,6 +340,7 @@
 			centerCircle.setMap(thisMap.map);
 			center = centerCircle.getCenter();
 			thisMap.oldZoom = thisMap.map.getZoom();
+			
 			setTimeout(function () {
 				thisMap.map.setCenter(center);
 				if(dist == 100){
@@ -344,7 +357,34 @@
 					thisMap.map.setZoom(11);
 				}else{
 					thisMap.map.setZoom(7);
+				}		
+				
+			
+			center = new google.maps.LatLng(centerCircle.getCenter());
+			circleLat = center.lat();
+			circleLng = center.lng();
+			
+			
+			
+			var row = [];
+			row = thisMap.db.query('markers');
+			for(i=0; i<thisMap.db.rowCount('markers'); i++){
+				lat = row[i].lat;
+				lng = row[i].lng;
+				if(row.ID == i){
+					console.log(row.ID);
 				}
+				
+				if(((Math.acos(Math.sin(thisMap.centerCircLat * Math.PI / 180) * Math.sin(lat * Math.PI / 180) + Math.cos(thisMap.centerCircLat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) * Math.cos((thisMap.centerCircLng - lng) * Math.PI / 180)) * 180 / Math.PI) * 60 * 1.1515) * 1 > dist){
+					thisMap.arrayOfKeptMarkers[thisMap.counter] = i;
+					thisMap.markers[i].setMap(null);
+					thisMap.counter++;
+					console.log(thisMap.arrayOfKeptMarkers[thisMap.counter-1]);
+					
+				};
+				
+			};
+			
 			}, 250);
 			
 		};
